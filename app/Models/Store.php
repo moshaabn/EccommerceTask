@@ -12,11 +12,11 @@ class Store extends Model
         'name',
         'vat',
         'shipping_cost',
-        'merchant_id',
+        'user_id',
     ];
     public function merchant()
     {
-        return $this->belongsTo(User::class, 'merchant_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
     public function products()
     {

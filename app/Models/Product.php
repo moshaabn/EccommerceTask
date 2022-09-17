@@ -21,4 +21,13 @@ class Product extends Model
     {
         return $this->belongsTo(Store::class);
     }
+    /**
+     * Get all of the cart_items for the Product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function cart_items(): HasMany
+    {
+        return $this->hasMany(CartItem::class);
+    }
 }
