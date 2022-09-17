@@ -14,7 +14,7 @@ class CartController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json( Cart::where('user_id', auth('sanctum')->user()->id)->with('cartItems')->first(), 200);
     }
 
     /**

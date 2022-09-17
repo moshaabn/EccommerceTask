@@ -14,7 +14,6 @@ class Product extends Model
         'details_en',
         'details_ar',
         'price',
-        'shipping_cost',
         'store_id',
     ];
     public function store()

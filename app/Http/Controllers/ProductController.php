@@ -35,7 +35,26 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name_en' => 'required',
+            'name_ar' => 'required',
+            'description_en' => 'required',
+            'description_ar' => 'required',
+            'is_vat_included' => 'boolean|required',
+            'price' => 'required|gt:0'
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->messages(), 422);
+
+        }
+        $user = auth('sanctum')->user();
+        $store = Store::where('user_id', $user->id)->first();
+        $data = $request->all();
+        if(!$request->is_vat_included){
+            $date->price += $data->price * $store->vat / 100;
+        }
+
+       return response()->json(Item::create($data), 201);
     }
 
     /**

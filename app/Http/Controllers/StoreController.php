@@ -35,7 +35,20 @@ class StoreController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'is_vat_included' => 'boolean|required',
+            'shipping_cost' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->messages(), 422);
+
+        }
+        $user = auth('sanctum')->user();
+        $data = $request->all();
+
+        $data->user_id= $user->id;
+       return response()->json(Store::create($data), 201);
     }
 
     /**
@@ -57,7 +70,7 @@ class StoreController extends Controller
      */
     public function edit(Store $store)
     {
-        //
+        
     }
 
     /**
@@ -69,7 +82,20 @@ class StoreController extends Controller
      */
     public function update(Request $request, Store $store)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'is_vat_included' => 'boolean|required',
+            'shipping_cost' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->messages(), 422);
+        }
+        $user = auth('sanctum')->user();
+        if($store->user_id != $user->id){
+            return response()->json(['message' => 'Unauthoized'], 403);
+        }
+        $data = $store->update($request->all());
+       return response()->json(Store::create($data), 201);
     }
 
     /**
