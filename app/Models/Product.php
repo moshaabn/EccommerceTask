@@ -11,10 +11,11 @@ class Product extends Model
     protected $fillable = [
         'name_en',
         'name_ar',
-        'details_en',
-        'details_ar',
+        'description_en',
+        'description_ar',
         'price',
         'store_id',
+        'is_vat_included',
     ];
     public function store()
     {

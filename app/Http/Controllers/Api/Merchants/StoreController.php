@@ -44,7 +44,7 @@ class StoreController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'vat' => 'required',
-            'shipping_cost' => 'required'
+            'shipping_cost' => 'required|gt:0'
         ]);
         if ($validator->fails()) {
             return response()->json($validator->messages(), 422);
@@ -95,7 +95,7 @@ class StoreController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'vat' => 'required',
-            'shipping_cost' => 'required'
+            'shipping_cost' => 'required|gt:0'
         ]);
         if ($validator->fails()) {
             return response()->json($validator->messages(), 422);
