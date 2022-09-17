@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\Merchants;
 
 use App\Models\Store;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class StoreController extends Controller
 {
@@ -14,7 +16,7 @@ class StoreController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(Store::where('user_id', auth('sanctum')->user()->id)->First(), 200);
     }
 
     /**
@@ -35,9 +37,13 @@ class StoreController extends Controller
      */
     public function store(Request $request)
     {
+        $store = Store::where('user_id', auth('sanctum')->user()->id)->First();
+        if(!is_null($store)){
+            return response()->json(['message' => 'Store already exist.'], 422);
+        }
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'is_vat_included' => 'boolean|required',
+            'vat' => 'required',
             'shipping_cost' => 'required'
         ]);
         if ($validator->fails()) {
@@ -47,7 +53,7 @@ class StoreController extends Controller
         $user = auth('sanctum')->user();
         $data = $request->all();
 
-        $data->user_id= $user->id;
+        $data['user_id']= $user->id;
        return response()->json(Store::create($data), 201);
     }
 
@@ -80,22 +86,23 @@ class StoreController extends Controller
      * @param  \App\Models\Store  $store
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Store $store)
+    public function update(Request $request)
     {
+        $store = Store::where('user_id', auth('sanctum')->user()->id)->First();
+        if(is_null($store)){
+            return response()->json(['message' => 'No Store  exist.'], 422);
+        }
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'is_vat_included' => 'boolean|required',
+            'vat' => 'required',
             'shipping_cost' => 'required'
         ]);
         if ($validator->fails()) {
             return response()->json($validator->messages(), 422);
         }
-        $user = auth('sanctum')->user();
-        if($store->user_id != $user->id){
-            return response()->json(['message' => 'Unauthoized'], 403);
-        }
+        
         $data = $store->update($request->all());
-       return response()->json(Store::create($data), 201);
+       return response()->json($store, 200);
     }
 
     /**

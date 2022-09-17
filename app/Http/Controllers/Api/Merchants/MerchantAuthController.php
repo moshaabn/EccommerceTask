@@ -91,7 +91,7 @@ class MerchantAuthController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'User Logged In Successfully',
-                'token' => $user->createToken("API TOKEN", ['User'])->plainTextToken
+                'token' => $user->createToken("API TOKEN", ['Merchant'])->plainTextToken
             ], 200);
 
         } catch (\Throwable $th) {
