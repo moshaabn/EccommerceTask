@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Merchants;
+namespace App\Http\Controllers\Api;
 
 use App\Models\Store;
 use App\Models\Product;
@@ -10,27 +10,6 @@ use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $store = Store::where('user_id', auth('sanctum')->user()->id)->First();
-        return response()->json(Product::where('store_id', auth('sanctum')->user()->store->id)->paginate(), 200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -49,8 +28,7 @@ class ProductController extends Controller
             'description_en' => 'required',
             'description_ar' => 'required',
             'is_vat_included' => 'boolean|required',
-            'price' => 'required|gt:0',
-            'quantity' => 'required|gt:-1',
+            'price' => 'required|gt:0'
         ]);
         if ($validator->fails()) {
             return response()->json($validator->messages(), 422);
@@ -110,8 +88,7 @@ class ProductController extends Controller
             'description_en' => 'required',
             'description_ar' => 'required',
             'is_vat_included' => 'boolean|required',
-            'price' => 'required|gt:0',
-            'quantity' => 'required|gt:-1',
+            'price' => 'required|gt:0'
         ]);
         if ($validator->fails()) {
             return response()->json($validator->messages(), 422);

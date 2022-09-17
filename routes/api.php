@@ -2,9 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\Merchants\MerchantAuthController;
-use App\Http\Controllers\Api\Merchants\StoreController;
-use App\Http\Controllers\Api\Merchants\ProductController;
+use App\Http\Controllers\Api\Merchants;
+use App\Http\Controllers\Api;
 
 
 /*
@@ -18,15 +17,24 @@ use App\Http\Controllers\Api\Merchants\ProductController;
 |
 */
 
-Route::post('/merchants/auth/register', [MerchantAuthController::class, 'createUser']);
-Route::post('/merchants/auth/login', [MerchantAuthController::class, 'loginUser']);
-// Route::post('/auth/register', [AuthController::class, 'createUser']);
-// Route::post('/auth/login', [AuthController::class, 'loginUser']);
+Route::post('/merchants/auth/register', [Merchants\MerchantAuthController::class, 'createUser']);
+Route::post('/merchants/auth/login', [Merchants\MerchantAuthController::class, 'loginUser']);
+Route::post('/auth/register', [Api\AuthController::class, 'createUser']);
+Route::post('/auth/login', [Api\AuthController::class, 'loginUser']);
+
 Route::group(['middleware' => ['auth:sanctum', 'abilities:Merchant']], function () {
-    Route::put('/merchants/stores', [StoreController::class, 'update']);
-    Route::resource('/merchants/stores', StoreController::class);
-    Route::resource('/merchants/products', ProductController::class);
+    Route::put('/merchants/stores', [Merchants\StoreController::class, 'update']);
+    Route::resource('/merchants/stores', Merchants\StoreController::class);
+    Route::resource('/merchants/products', Merchants\ProductController::class);
 });
+
+Route::group(['middleware' => ['auth:sanctum', 'abilities:User']], function () {
+    Route::post('/cart/add-product', [Api\CartController::class, 'add_product']);
+    Route::get('/my-cart', [Api\CartController::class, 'my_cart']);
+});
+
+Route::get('/products', [Api\ProductController::class, 'index']);
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });

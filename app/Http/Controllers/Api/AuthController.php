@@ -46,7 +46,7 @@ class AuthController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'User Created Successfully',
-                'token' => $user->createToken("API TOKEN")->plainTextToken
+                'token' => $user->createToken("API TOKEN", ['User'])->plainTextToken
             ], 200);
 
         } catch (\Throwable $th) {
@@ -86,7 +86,13 @@ class AuthController extends Controller
                 ], 401);
             }
 
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('email', $request->email)->with(['role'])->first();
+            if($user->role->name != 'User'){
+                return response()->json([
+                'status' => false,
+                'message' => 'Unauthorized'
+            ], 403);
+            }
 
             return response()->json([
                 'status' => true,

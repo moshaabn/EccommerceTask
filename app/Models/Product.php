@@ -14,6 +14,7 @@ class Product extends Model
         'description_en',
         'description_ar',
         'price',
+        'quantity',
         'store_id',
         'is_vat_included',
     ];

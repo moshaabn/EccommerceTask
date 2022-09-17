@@ -42,6 +42,7 @@ class MerchantAuthController extends Controller
                 'password' => Hash::make($request->password),
                 'role_id' => Role::Where('name', 'Merchant')->First()->id
             ]);
+            
 
             return response()->json([
                 'status' => true,
@@ -86,7 +87,13 @@ class MerchantAuthController extends Controller
                 ], 401);
             }
 
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('email', $request->email)->with(['role'])->first();
+            if($user->role->name != 'Merchant'){
+                return response()->json([
+                'status' => false,
+                'message' => 'Unauthorized'
+            ], 403);
+            }
 
             return response()->json([
                 'status' => true,

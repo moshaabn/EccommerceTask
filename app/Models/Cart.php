@@ -9,7 +9,6 @@ class Cart extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'quantity',
         'user_id'
     ];
     public function user()
@@ -21,7 +20,7 @@ class Cart extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function cart_items(): HasMany
+    public function cart_items()
     {
         return $this->hasMany(CartItem::class);
     }
